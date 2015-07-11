@@ -35,12 +35,18 @@ namespace AIServer
                     bool used = planet.Enemies.Count > 0;
                     foreach (var enemy in planet.Enemies)
                     {
-                        if (planet.Planet.ShipCount > enemy.ShipCount)
+                        if (planet.Planet.ShipCount > enemy.ShipCount && helper.NbShipsAttacking(enemy) <= enemy.ShipCount + 1)
                         {
+                            int additionalShips = 1;
+                            if (enemy.Owner == String.Empty)
+                                additionalShips = 1;
+                            else
+                                additionalShips = 5;
+
                             usedPlanet.Add(enemy);
-                            Send(planet.Planet, enemy, 2);
+                            Send(planet.Planet, enemy, 2, enemy.ShipCount + additionalShips);
                             
-                            planet.Planet.ShipCount -= enemy.ShipCount + 1;
+                            planet.Planet.ShipCount -= enemy.ShipCount + additionalShips;
                             used = true;
                             break;
                         }
@@ -68,11 +74,11 @@ namespace AIServer
             }
         }
 
-        void Send(Planet owner, Planet target, int size)
+        void Send(Planet owner, Planet target, int chunks, int size)
         {
             for (int i = 0; i < size; i++)
             {
-                Game.AttackPlanet(owner, target, Convert.ToInt32(Math.Ceiling((double)(target.ShipCount + 1) / size)));
+                Game.AttackPlanet(owner, target, Convert.ToInt32(Math.Ceiling((double)(size + 1) / chunks)));
             }
         }
 

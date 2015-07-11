@@ -53,8 +53,10 @@ namespace AIServer
         //public IEnumerable<KeyValuePair<Planet, Planet>> WeakEnemyPlanets(IEnumerable<PlanetEnemies> ourPlanets)
         //{
             
-        //    //return enemies.Where(x => ourPlanet.ShipCount > x.ShipCount);
-        //}
+        public int NbShipsAttacking(Planet destination)
+        {
+            return Container.Ships.Where(x => x.Owner == AI.name && x.TargetId == destination.Id).Sum(x => x.ShipCount);
+        }
 
         public double DistanceBetweenPlanets(Planet a, Planet b)
         {
