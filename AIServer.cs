@@ -10,7 +10,7 @@ namespace AIServer
     {
         static void Main(string[] args)
         {
-            int port = 8888;
+            int port = 8889;
             if (args.Any())
                 port = Int32.Parse(args[0]);
 

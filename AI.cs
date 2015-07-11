@@ -11,7 +11,7 @@ namespace AIServer
         public TCPServer Game { get; private set; }
 
         // Set your team Name here!!!
-        public const string name = "Blue Waffle";
+        public const string name = "Blue WaffleNEW";
 
         public AI(TCPServer server)
         {
@@ -41,7 +41,6 @@ namespace AIServer
                 ourPlanets.RemoveAll(x=>toDelete.Contains(x.Planet.Id));
                 foreach (var planet in ourPlanets)
                 {
-
                     planet.Enemies.RemoveAll(x => usedPlanet.Any(u => u.Id == x.Id));
                     bool used = planet.Enemies.Count > 0;
                     foreach (var enemy in planet.Enemies)
@@ -49,15 +48,11 @@ namespace AIServer
                         if (enemy.Owner != String.Empty)
                         {
                             Send(planet.Planet, enemy, 2, planet.Planet.ShipCount / 2);
-                            planet.Planet.ShipCount = 0;
+                            planet.Planet.ShipCount /= 2;
                         }
                         else if (enemy.Owner == String.Empty && planet.Planet.ShipCount > enemy.ShipCount+1 && helper.NbShipsAttacking(enemy) <= enemy.ShipCount + 1)
                         {
-                            int additionalShips = 0;
-                            if (enemy.Owner == String.Empty)
-                                additionalShips = 2;
-                            else
-                                additionalShips = 6;
+                            int additionalShips = 2;
 
                             usedPlanet.Add(enemy);
                             Send(planet.Planet, enemy, 2, enemy.ShipCount + additionalShips);
