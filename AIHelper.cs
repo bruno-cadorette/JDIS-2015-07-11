@@ -62,6 +62,7 @@ namespace AIServer
 
         public IEnumerable<Planet> EnemyPlanets()
         {
+            //return Container.Planets.Where(x => x.Owner != AI.name && x.Owner != String.Empty);
             return Container.Planets.Where(x => x.Owner != AI.name).Where(x => x.Owner != String.Empty || x.ShipCount <= 6);
         }
         public IEnumerable<Planet> WeakEnemyPlanets(Planet ourPlanet, IEnumerable<Planet> enemies)

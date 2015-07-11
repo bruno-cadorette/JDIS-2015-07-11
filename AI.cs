@@ -36,7 +36,7 @@ namespace AIServer
             if (helper.DeathStar().Owner == name && helper.DeathStar().DeathStarCharge >= 1)
                 Game.DeathstarDestroyPlanet(helper.DeathStar(), helper.PlanetWithHighestPop());
 
-            Defence(helper);
+            //Defence(helper);
             while (ourPlanets.Count > 0)
             {
                 ourPlanets.RemoveAll(x=>toDelete.Contains(x.Planet.Id));
