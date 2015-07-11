@@ -50,6 +50,11 @@ namespace AIServer
             }
             return target;
         }
+        public int NbEnemyPlanet()
+        {
+            return Container.Planets.Where(x => x.Owner != AI.name && x.Owner != String.Empty).Sum(x => 1);
+        }
+
         public IEnumerable<Planet> OurPlanet()
         {
             return Container.Planets.Where(x => x.Owner == AI.name);
@@ -92,11 +97,6 @@ namespace AIServer
         public Planet ClosestPlanet(Planet home, IEnumerable<Planet> planets)
         {
             return planets.Where(x => x.Id != home.Id).OrderBy(x => DistanceBetweenPlanets(home, x)).First();
-        }
-
-        public bool AreEnemyShipFlying()
-        {
-            return Container.Ships.Any(x => x.Owner != AI.name);
         }
     }
 }

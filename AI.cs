@@ -25,7 +25,7 @@ namespace AIServer
             var usedPlanet = new List<Planet>();
             var toDelete = new List<int>();
 
-            if (helper.DeathStar().Owner != name && helper.DeathStar().Owner != string.Empty && helper.TotalPlanetArmySize() > helper.DeathStar().ShipCount)
+            if (helper.DeathStar().Owner != name && helper.DeathStar().Owner != string.Empty)
             {
                 foreach (var planet in ourPlanets)
                 {
@@ -46,7 +46,12 @@ namespace AIServer
                     bool used = planet.Enemies.Count > 0;
                     foreach (var enemy in planet.Enemies)
                     {
-                        if (planet.Planet.ShipCount > enemy.ShipCount+1 && helper.NbShipsAttacking(enemy) <= enemy.ShipCount + 1)
+                        if (enemy.Owner != String.Empty)
+                        {
+                            Send(planet.Planet, enemy, 2, planet.Planet.ShipCount / 2);
+                            planet.Planet.ShipCount = 0;
+                        }
+                        else if (enemy.Owner == String.Empty && planet.Planet.ShipCount > enemy.ShipCount+1 && helper.NbShipsAttacking(enemy) <= enemy.ShipCount + 1)
                         {
                             int additionalShips = 0;
                             if (enemy.Owner == String.Empty)
@@ -56,7 +61,6 @@ namespace AIServer
 
                             usedPlanet.Add(enemy);
                             Send(planet.Planet, enemy, 2, enemy.ShipCount + additionalShips);
-                            
                             planet.Planet.ShipCount -= enemy.ShipCount + additionalShips;
                             used = true;
                             break;
