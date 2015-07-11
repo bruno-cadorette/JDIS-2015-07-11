@@ -43,6 +43,10 @@ namespace AIServer
                 {
                     planet.Enemies.RemoveAll(x => usedPlanet.Any(u => u.Id == x.Id));
                     bool used = planet.Enemies.Count > 0;
+                    if (helper.IncomingForce(planet.Planet) <= planet.Planet.ShipCount)
+                    {
+                        planet.Planet.ShipCount -= helper.IncomingForce(planet.Planet);
+                    }
                     foreach (var enemy in planet.Enemies)
                     {
                         if (enemy.Owner != String.Empty)
