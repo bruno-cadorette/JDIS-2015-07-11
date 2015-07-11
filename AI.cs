@@ -76,7 +76,7 @@ namespace AIServer
 
         void Send(Planet owner, Planet target, int chunks, int size)
         {
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < chunks; i++)
             {
                 Game.AttackPlanet(owner, target, Convert.ToInt32(Math.Ceiling((double)(size + 1) / chunks)));
             }
