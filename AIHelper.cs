@@ -36,15 +36,15 @@ namespace AIServer
             }
             return null;
         }
-        public Planet PlanetWithHighestPop()
+        public Planet PlanetWithHighestSize()
         {
-            int highest = 0;
+            float highest = 0;
             Planet target = DeathStar();
             foreach (Planet planet in Container.Planets.Where(x => x.Owner != AI.name && x.Owner != String.Empty))
             {
-                if (planet.ShipCount > highest)
+                if (planet.Size > highest)
                 {
-                    highest = planet.ShipCount;
+                    highest = planet.Size;
                     target = planet;
                 }
             }

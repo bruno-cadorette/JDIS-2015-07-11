@@ -34,7 +34,7 @@ namespace AIServer
                 return;
             }
             if (helper.DeathStar().Owner == name && helper.DeathStar().DeathStarCharge >= 1)
-                Game.DeathstarDestroyPlanet(helper.DeathStar(), helper.PlanetWithHighestPop());
+                Game.DeathstarDestroyPlanet(helper.DeathStar(), helper.PlanetWithHighestSize());
 
             while (ourPlanets.Count > 0)
             {
