@@ -10,7 +10,13 @@ namespace AIServer
     {
         private UpdateContainer Container;
 
-        
+        public double Rayon
+        {
+            get
+            {
+                return Container.Planets.Average(planet => DistanceBetweenPlanets(planet, ClosestPlanet(planet,Container.Planets))) * 2;
+            }
+        }
 
         public AIHelper(UpdateContainer container)
         {
@@ -52,16 +58,14 @@ namespace AIServer
         public double DistanceToClosestEnemyPlanet(Planet planet)
         {
             var p = EnemyPlanets().Where(x => x.Id != planet.Id).OrderBy(x => DistanceBetweenPlanets(planet, x)).First();
-            return DistanceBetweenPlanets(planet,p);
+            return DistanceBetweenPlanets(planet, p);
         }
 
-        public Planet PlanetInDanger()
+        public Planet PlanetInDanger(Planet planet, IEnumerable<Planet> planets)
         {
-            return OurPlanet().OrderBy(DistanceToClosestEnemyPlanet).First();
+            return planets.OrderBy(DistanceToClosestEnemyPlanet).First();
         }
-        //public IEnumerable<KeyValuePair<Planet, Planet>> WeakEnemyPlanets(IEnumerable<PlanetEnemies> ourPlanets)
-        //{
-            
+
         public int NbShipsAttacking(Planet destination)
         {
             return Container.Ships.Where(x => x.Owner == AI.name && x.TargetId == destination.Id).Sum(x => x.ShipCount);
@@ -74,18 +78,29 @@ namespace AIServer
 
         public double DistanceBetweenPlanets(Planet a, Planet b)
         {
-            var intermediare = Math.Pow((b.PosX - a.PosX),2) + Math.Pow((b.PosY - a.PosY),2);
+            var intermediare = Math.Pow((b.PosX - a.PosX), 2) + Math.Pow((b.PosY - a.PosY), 2);
             return Math.Sqrt(intermediare);
         }
 
         public Planet ClosestPlanet(Planet home, IEnumerable<Planet> planets)
         {
-            return planets.OrderBy(x => DistanceBetweenPlanets(home, x)).First();
+            return planets.Where(x => x.Id != home.Id).OrderBy(x => DistanceBetweenPlanets(home, x)).First();
         }
 
-        public Tuple<IEnumerable<T>,IEnumerable<T>> Partition<T>(IEnumerable<T> collection, Func<T,bool> predicate)
+        public Planet ClosestPlanetInDanger(Planet home, IEnumerable<Planet> planets)
+        {
+
+            return planets.Where(x => x.Id != home.Id).OrderBy(x => DistanceBetweenPlanets(home, x)).FirstOrDefault(x => !IsSafe(x));
+        }
+        
+        public Tuple<IEnumerable<T>, IEnumerable<T>> Partition<T>(IEnumerable<T> collection, Func<T, bool> predicate)
         {
             return Tuple.Create(collection.Where(predicate), collection.Where(x => !predicate(x)));
+        }
+
+        public bool IsSafe(Planet ourPlanet)
+        {
+            return EnemyPlanets().Where(x=>x.Owner!="").OrderBy(x => DistanceBetweenPlanets(ourPlanet, x)).Take(5).All(x => x.Owner == AI.name);
         }
     }
 }

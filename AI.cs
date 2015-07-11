@@ -11,7 +11,7 @@ namespace AIServer
         public TCPServer Game { get; private set; }
 
         // Set your team Name here!!!
-        public const string name = "Blue Waffle2";
+        public const string name = "Blue Waffle";
 
         public AI(TCPServer server)
         {
@@ -72,11 +72,14 @@ namespace AIServer
         }
         void Defence(AIHelper helper)
         {
-            double rayon = 5;
+            double rayon = helper.Rayon;
             var ourPlanets = helper.OurPlanet();
             var enemies = helper.EnemyPlanets();
             var planets = helper.Partition(ourPlanets, x => helper.EnemyInRayon(x, rayon));
-            foreach (var planet in planets.Item2)
+
+            // Item1 == ceux en danger
+            // Item2 == a envoyer
+            foreach (var planet in planets.Item2.Where(x=>!helper.IsSafe(x)))
             {
                 var ally = helper.ClosestPlanet(planet, planets.Item1);
                 Send(planet, ally, 2, planet.ShipCount / 2);
