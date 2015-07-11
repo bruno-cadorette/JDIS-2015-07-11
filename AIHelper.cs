@@ -10,17 +10,7 @@ namespace AIServer
     {
         private UpdateContainer Container;
 
-        public class PlanetEnemies
-        {
-            Planet planet;
-            IEnumerable<KeyValuePair<Planet, double>> enemies;
-
-            public PlanetEnemies(Planet planet, IEnumerable<Planet> enemies)
-            {
-                this.planet = planet;
-                this.enemies = enemies;
-            }
-        }
+        
 
         public AIHelper(UpdateContainer container)
         {
