@@ -11,7 +11,7 @@ namespace AIServer
         public TCPServer Game { get; private set; }
 
         // Set your team Name here!!!
-        public const string name = "Blue WaffleNEW";
+        public const string name = "Blue Waffle";
 
         public AI(TCPServer server)
         {
