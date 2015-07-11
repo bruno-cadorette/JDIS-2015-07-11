@@ -11,7 +11,7 @@ namespace AIServer
         public TCPServer Game { get; private set; }
 
         // Set your team Name here!!!
-        private const string name = "Bot";
+        public const string name = "Blue Waffle";
 
         public AI(TCPServer server)
         {
@@ -20,6 +20,21 @@ namespace AIServer
 
         public void update(UpdateContainer container)
         {
+            var helper = new AIHelper(container);
+            foreach (var planet in helper.OurPlanet())
+            {
+                var enemies = helper.EnemyPlanetsByDistance(planet);
+                var weaks = helper.WeakEnemyPlanets(planet, enemies).ToArray();
+                int shipCount = planet.ShipCount;
+                for (int i=0;i < weaks.Length ;i++)
+                {
+                    if (shipCount > weaks[i].ShipCount)
+                    {
+                        Game.AttackPlanet(planet, weaks[i], weaks[i].ShipCount + 1);
+                        shipCount -= weaks[i].ShipCount + 1;
+                    }
+                }
+            }
             Console.Out.WriteLine("Updating");
         }
 
