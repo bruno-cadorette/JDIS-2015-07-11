@@ -17,9 +17,18 @@ namespace AIServer
             Container = container;
         }
 
-        public float TotalArmySize()
+        public float TotalPlanetArmySize()
         {
-            return Container.Planets.Sum(x => x.Size);
+            return Container.Planets.Where(x => x.Owner == AI.name).Sum(x => x.Size);
+        }
+        public Planet DeathStar()
+        {
+            foreach (Planet planet in Container.Planets)
+            {
+                if (planet.IsDeathStar)
+                    return planet;
+            }
+            return null;
         }
         public IEnumerable<Planet> OurPlanet()
         {
