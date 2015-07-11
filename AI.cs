@@ -62,16 +62,15 @@ namespace AIServer
         }
         void Defence(AIHelper helper)
         {
-            //var ourPlanets = helper.OurPlanet();
-            //var enemies = helper.EnemyPlanets();
-            //foreach (var planet in ourPlanets)
-            //{
-            //    if(enemies.All(enemy => ourPlanets.Max(o => helper.DistanceBetweenPlanets(o, enemy)) > helper.DistanceBetweenPlanets(planet, enemy)))
-            //    {
-            //        var planetToSend = helper.PlanetInDanger();
-            //        Game.AttackPlanet(planet, planetToSend, planet.ShipCount / 2);
-            //    }
-            //}
+            double rayon = 5;
+            var ourPlanets = helper.OurPlanet();
+            var enemies = helper.EnemyPlanets();
+            var planets = helper.Partition(ourPlanets, x => helper.EnemyInRayon(x, rayon));
+            foreach (var planet in planets.Item2)
+            {
+                var ally = helper.ClosestPlanet(planet, planets.Item1);
+                Send(planet, ally, 2, planet.ShipCount / 2);
+            }
         }
 
         void Send(Planet owner, Planet target, int chunks, int size)
