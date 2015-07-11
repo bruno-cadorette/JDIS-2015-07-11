@@ -11,7 +11,7 @@ namespace AIServer
         public TCPServer Game { get; private set; }
 
         // Set your team Name here!!!
-        public const string name = "Blue Waffle2";
+        public const string name = "Blue Waffle";
 
         public AI(TCPServer server)
         {
@@ -24,6 +24,7 @@ namespace AIServer
             var ourPlanets = helper.OurPlanet().Select(planet => new PlanetEnemies(planet, helper.EnemyPlanetsByDistance(planet))).ToList();
             var usedPlanet = new List<Planet>();
             var toDelete = new List<int>();
+            Defence(helper);
             while (ourPlanets.Count > 0)
             {
                 ourPlanets.RemoveAll(x=>toDelete.Contains(x.Planet.Id));
@@ -52,6 +53,19 @@ namespace AIServer
                 }
             }
             Console.Out.WriteLine("Updating");
+        }
+        void Defence(AIHelper helper)
+        {
+            var ourPlanets = helper.OurPlanet();
+            var enemies = helper.EnemyPlanets();
+            foreach (var planet in ourPlanets)
+            {
+                if(enemies.All(enemy => ourPlanets.Max(o => helper.DistanceBetweenPlanets(o, enemy)) > helper.DistanceBetweenPlanets(planet, enemy)))
+                {
+                    var planetToSend = helper.PlanetInDanger();
+                    Game.AttackPlanet(planet, planetToSend, planet.ShipCount / 2);
+                }
+            }
         }
 
         void Send(Planet owner, Planet target, int size)
