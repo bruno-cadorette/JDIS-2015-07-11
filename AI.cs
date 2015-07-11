@@ -62,16 +62,16 @@ namespace AIServer
         }
         void Defence(AIHelper helper)
         {
-            var ourPlanets = helper.OurPlanet();
-            var enemies = helper.EnemyPlanets();
-            foreach (var planet in ourPlanets)
-            {
-                if(enemies.All(enemy => ourPlanets.Max(o => helper.DistanceBetweenPlanets(o, enemy)) > helper.DistanceBetweenPlanets(planet, enemy)))
-                {
-                    var planetToSend = helper.PlanetInDanger();
-                    Game.AttackPlanet(planet, planetToSend, planet.ShipCount / 2);
-                }
-            }
+            //var ourPlanets = helper.OurPlanet();
+            //var enemies = helper.EnemyPlanets();
+            //foreach (var planet in ourPlanets)
+            //{
+            //    if(enemies.All(enemy => ourPlanets.Max(o => helper.DistanceBetweenPlanets(o, enemy)) > helper.DistanceBetweenPlanets(planet, enemy)))
+            //    {
+            //        var planetToSend = helper.PlanetInDanger();
+            //        Game.AttackPlanet(planet, planetToSend, planet.ShipCount / 2);
+            //    }
+            //}
         }
 
         void Send(Planet owner, Planet target, int chunks, int size)
