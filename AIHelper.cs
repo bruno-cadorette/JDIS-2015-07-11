@@ -14,7 +14,7 @@ namespace AIServer
         {
             get
             {
-                return Container.Planets.Average(planet => DistanceBetweenPlanets(planet, ClosestPlanet(planet,Container.Planets))) * 2;
+                return Container.Planets.Average(planet => DistanceBetweenPlanets(planet, ClosestPlanet(planet, Container.Planets))) * 2;
             }
         }
 
@@ -77,7 +77,7 @@ namespace AIServer
             return DistanceBetweenPlanets(planet, p);
         }
 
-            
+
         public int NbShipsAttacking(Planet destination)
         {
             return Container.Ships.Where(x => x.Owner == AI.name && x.TargetId == destination.Id).Sum(x => x.ShipCount);
@@ -97,6 +97,16 @@ namespace AIServer
         public Planet ClosestPlanet(Planet home, IEnumerable<Planet> planets)
         {
             return planets.Where(x => x.Id != home.Id).OrderBy(x => DistanceBetweenPlanets(home, x)).First();
+        }
+        public int IncomingForce(Planet home)
+        {
+            int enemy = IncomingCount(s => s.Owner != AI.name, home);
+            int reinforcement = IncomingCount(s => s.Owner == AI.name, home);
+            return enemy - reinforcement;
+        }
+        private int IncomingCount(Func<Ship, bool> controller, Planet home)
+        {
+            return Container.Ships.Where(controller).Where(s => s.TargetId == home.Id).Sum(s => s.ShipCount);
         }
     }
 }
