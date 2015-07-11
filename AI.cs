@@ -11,7 +11,7 @@ namespace AIServer
         public TCPServer Game { get; private set; }
 
         // Set your team Name here!!!
-        public const string name = "Blue Waffle";
+        public const string name = "Blue Waffle2";
 
         public AI(TCPServer server)
         {
@@ -24,6 +24,16 @@ namespace AIServer
             var ourPlanets = helper.OurPlanet().Select(planet => new PlanetEnemies(planet, helper.EnemyPlanetsByDistance(planet))).ToList();
             var usedPlanet = new List<Planet>();
             var toDelete = new List<int>();
+
+            if (helper.TotalPlanetArmySize() > helper.DeathStar().ShipCount)
+            {
+                foreach (var planet in ourPlanets)
+                {
+                    Send(planet.Planet, helper.DeathStar(), 1, planet.Planet.ShipCount);
+                }
+                return;
+            }
+
             Defence(helper);
             while (ourPlanets.Count > 0)
             {
