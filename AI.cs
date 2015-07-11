@@ -11,7 +11,7 @@ namespace AIServer
         public TCPServer Game { get; private set; }
 
         // Set your team Name here!!!
-        public const string name = "Blue Waffle2";
+        public const string name = "Blue Waffle";
 
         public AI(TCPServer server)
         {
@@ -25,7 +25,7 @@ namespace AIServer
             var usedPlanet = new List<Planet>();
             var toDelete = new List<int>();
 
-            if (helper.TotalPlanetArmySize() > helper.DeathStar().ShipCount)
+            if (helper.DeathStar().Owner != name && helper.DeathStar().Owner != string.Empty && helper.TotalPlanetArmySize() > helper.DeathStar().ShipCount)
             {
                 foreach (var planet in ourPlanets)
                 {
@@ -33,6 +33,8 @@ namespace AIServer
                 }
                 return;
             }
+            if (helper.DeathStar().Owner == name && helper.DeathStar().DeathStarCharge >= 1)
+                Game.DeathstarDestroyPlanet(helper.DeathStar(), helper.PlanetWithHighestPop());
 
             Defence(helper);
             while (ourPlanets.Count > 0)
@@ -45,13 +47,13 @@ namespace AIServer
                     bool used = planet.Enemies.Count > 0;
                     foreach (var enemy in planet.Enemies)
                     {
-                        if (planet.Planet.ShipCount > enemy.ShipCount && helper.NbShipsAttacking(enemy) <= enemy.ShipCount + 1)
+                        if (planet.Planet.ShipCount > enemy.ShipCount+1 && helper.NbShipsAttacking(enemy) <= enemy.ShipCount + 1)
                         {
-                            int additionalShips = 1;
+                            int additionalShips = 0;
                             if (enemy.Owner == String.Empty)
-                                additionalShips = 1;
+                                additionalShips = 2;
                             else
-                                additionalShips = 5;
+                                additionalShips = 6;
 
                             usedPlanet.Add(enemy);
                             Send(planet.Planet, enemy, 2, enemy.ShipCount + additionalShips);
@@ -87,7 +89,7 @@ namespace AIServer
         {
             for (int i = 0; i < chunks; i++)
             {
-                Game.AttackPlanet(owner, target, Convert.ToInt32(Math.Ceiling((double)(size + 1) / chunks)));
+                Game.AttackPlanet(owner, target, Convert.ToInt32(Math.Floor((double)size / chunks)));
             }
         }
 

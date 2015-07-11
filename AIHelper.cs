@@ -10,16 +10,14 @@ namespace AIServer
     {
         private UpdateContainer Container;
 
-        
-
         public AIHelper(UpdateContainer container)
         {
             Container = container;
         }
 
-        public float TotalPlanetArmySize()
+        public int TotalPlanetArmySize()
         {
-            return Container.Planets.Where(x => x.Owner == AI.name).Sum(x => x.Size);
+            return Container.Planets.Where(x => x.Owner == AI.name).Sum(x => x.ShipCount);
         }
         public Planet DeathStar()
         {
@@ -29,6 +27,20 @@ namespace AIServer
                     return planet;
             }
             return null;
+        }
+        public Planet PlanetWithHighestPop()
+        {
+            int highest = 0;
+            Planet target = DeathStar();
+            foreach (Planet planet in Container.Planets.Where(x => x.Owner != AI.name && x.Owner != String.Empty))
+            {
+                if (planet.ShipCount > highest)
+                {
+                    highest = planet.ShipCount;
+                    target = planet;
+                }
+            }
+            return target;
         }
         public IEnumerable<Planet> OurPlanet()
         {
@@ -42,7 +54,7 @@ namespace AIServer
 
         public IEnumerable<Planet> EnemyPlanets()
         {
-            return Container.Planets.Where(x => x.Owner != AI.name);
+            return Container.Planets.Where(x => x.Owner != AI.name).Where(x => x.Owner != String.Empty || x.ShipCount <= 6);
         }
         public IEnumerable<Planet> WeakEnemyPlanets(Planet ourPlanet, IEnumerable<Planet> enemies)
         {
