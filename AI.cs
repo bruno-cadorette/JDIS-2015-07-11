@@ -26,6 +26,11 @@ namespace AIServer
                 var enemies = helper.EnemyPlanetsByDistance(planet);
                 var weaks = helper.WeakEnemyPlanets(planet, enemies).ToArray();
                 int shipCount = planet.ShipCount;
+
+
+
+
+
                 for (int i=0;i < weaks.Length ;i++)
                 {
                     if (shipCount > weaks[i].ShipCount)
