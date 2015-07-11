@@ -65,10 +65,6 @@ namespace AIServer
             //return Container.Planets.Where(x => x.Owner != AI.name && x.Owner != String.Empty);
             return Container.Planets.Where(x => x.Owner != AI.name).Where(x => x.Owner != String.Empty || x.ShipCount <= 6);
         }
-        public IEnumerable<Planet> WeakEnemyPlanets(Planet ourPlanet, IEnumerable<Planet> enemies)
-        {
-            return enemies.Where(x => ourPlanet.ShipCount > x.ShipCount);
-        }
 
         public double DistanceToClosestEnemyPlanet(Planet planet)
         {
@@ -76,10 +72,6 @@ namespace AIServer
             return DistanceBetweenPlanets(planet, p);
         }
 
-        public Planet PlanetInDanger(Planet planet, IEnumerable<Planet> planets)
-        {
-            return planets.OrderBy(DistanceToClosestEnemyPlanet).First();
-        }
             
         public int NbShipsAttacking(Planet destination)
         {
@@ -102,20 +94,9 @@ namespace AIServer
             return planets.Where(x => x.Id != home.Id).OrderBy(x => DistanceBetweenPlanets(home, x)).First();
         }
 
-        public Planet ClosestPlanetInDanger(Planet home, IEnumerable<Planet> planets)
+        public bool AreEnemyShipFlying()
         {
-
-            return planets.Where(x => x.Id != home.Id).OrderBy(x => DistanceBetweenPlanets(home, x)).FirstOrDefault(x => !IsSafe(x));
-        }
-
-        public Tuple<IEnumerable<T>, IEnumerable<T>> Partition<T>(IEnumerable<T> collection, Func<T, bool> predicate)
-        {
-            return Tuple.Create(collection.Where(predicate), collection.Where(x => !predicate(x)));
-        }
-
-        public bool IsSafe(Planet ourPlanet)
-        {
-            return EnemyPlanets().Where(x=>x.Owner!="").OrderBy(x => DistanceBetweenPlanets(ourPlanet, x)).Take(5).All(x => x.Owner == AI.name);
+            return Container.Ships.Any(x => x.Owner != AI.name);
         }
     }
 }

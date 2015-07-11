@@ -36,7 +36,6 @@ namespace AIServer
             if (helper.DeathStar().Owner == name && helper.DeathStar().DeathStarCharge >= 1)
                 Game.DeathstarDestroyPlanet(helper.DeathStar(), helper.PlanetWithHighestPop());
 
-            //Defence(helper);
             while (ourPlanets.Count > 0)
             {
                 ourPlanets.RemoveAll(x=>toDelete.Contains(x.Planet.Id));
@@ -71,21 +70,6 @@ namespace AIServer
                 }
             }
             Console.Out.WriteLine("Updating");
-        }
-        void Defence(AIHelper helper)
-        {
-            double rayon = helper.Rayon;
-            var ourPlanets = helper.OurPlanet();
-            var enemies = helper.EnemyPlanets();
-            var planets = helper.Partition(ourPlanets, x => helper.EnemyInRayon(x, rayon));
-
-            // Item1 == ceux en danger
-            // Item2 == a envoyer
-            foreach (var planet in planets.Item2.Where(x=>!helper.IsSafe(x)))
-            {
-                var ally = helper.ClosestPlanet(planet, planets.Item1);
-                Send(planet, ally, 2, planet.ShipCount / 2);
-            }
         }
 
         void Send(Planet owner, Planet target, int chunks, int size)
